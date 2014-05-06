@@ -4,7 +4,6 @@ app = {
     lastMessageId: 0,
 
     init: function() {
-      console.log('running chatterbox');
       // Get username
       app.username = window.location.search.substr(10);
       app.loadAllMessages();
@@ -17,7 +16,7 @@ app = {
 
     loadAllMessages: function(){
       app.loadMsgs();
-      setTimeout(app.loadAllMessages, 10000);
+      setTimeout(app.loadAllMessages, 1000);
     },
 
     handleSubmit: function(e){
@@ -47,11 +46,15 @@ app = {
 
     processNewMessages: function(messages){
       // messages arrive newest first
+      // messages = JSON.parse(messages);
+      // debugger;
       for( var i = messages.length; i > 0; i-- ){
         var message = messages[i-1];
         // check if objectId is in dom.
-        if( $('#chats').find('.message[data-id='+message.objectId+']').length ){ continue; }
-        $('#chats').prepend(app.renderMessage(message));
+        console.log($('#chats').find('.chat[data-id='+message.objectId+']'));
+        if( $('#chats').find('.chat[data-id='+message.objectId+']').length === 0 ){
+         $('#chats').prepend(app.renderMessage(message));
+        }
       }
     },
 
@@ -62,8 +65,8 @@ app = {
         // data: { order: '-createdAt'},
         contentType: 'application/json',
         success: function(json){
-          //console.log(json.results);
-          app.processNewMessages(json.results);
+          json = JSON.parse(json)
+          app.processNewMessages(json);
         },
         complete: function(){
           app.stopSpinner();
@@ -79,7 +82,7 @@ app = {
         contentType: 'application/json',
         success: function(json){
           //console.log(json);
-          app.processNewMessage(message, json.objectId);
+          //app.processNewMessage(message, json.objectId);
         },
         complete: function(){
           app.stopSpinner();

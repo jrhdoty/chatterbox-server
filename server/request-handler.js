@@ -1,36 +1,67 @@
-/* You should implement your request handler function in this file.
- * And hey! This is already getting passed to http.createServer()
- * in basic-server.js. But it won't work as is.
- * You'll have to figure out a way to export this function from
- * this file and include it in basic-server.js so that it actually works.
- * *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html. */
 
 var handleRequest = function(request, response) {
-  /* the 'request' argument comes from nodes http module. It includes info about the
-  request - such as what URL the browser is requesting. */
-
-  /* Documentation for both request and response can be found at
-   * http://nodemanual.org/0.8.14/nodejs_ref_guide/http.html */
 
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   var statusCode = 200;
 
-  /* Without this line, this server wouldn't work. See the note
-   * below about CORS. */
-  var headers = defaultCorsHeaders;
+  // var test = function(request, response){
+  //   request.addListener("data", function(data){
+  //     console.log(data.toString('utf8'));
+  //   });
+  // }
 
-  headers['Content-Type'] = "text/plain";
-
-  /* .writeHead() tells our server what HTTP status code to send back */
-  response.writeHead(statusCode, headers);
-
-  /* Make sure to always call response.end() - Node will not send
-   * anything back to the client until you do. The string you pass to
-   * response.end() will be the body of the response - i.e. what shows
-   * up in the browser.*/
-  response.end("Hello, world!");
+  //add check if handlers[request.method] is undefined and return 404
+  handlers[request.method](request, response);
 };
+
+var handlers = {};
+
+handlers.OPTIONS = function(request, response){
+    var statusCode = 200;
+    var headers = defaultCorsHeaders;
+    headers['Content-Type'] = "text/plain";
+    response.writeHead(statusCode, headers);
+    response.end("terminating options request")
+  };
+
+handlers.GET =  function(request, response){
+
+};
+
+handlers.POST =  function(request, response){
+  var username;
+  var message;
+  var time;
+  var key;
+  request.addListener("data", function(data){
+    message  = JSON.parse(data.toString());
+    text     = message.text;
+    username = message.username;
+    time     = new Date();
+    time     = time.toString();
+    key      = keyGen();
+
+    applicationData[key] = {
+      key      : key,
+      username : username,
+      time     : time,
+      text     : text
+    };
+  });
+};
+
+var nextKey = 0;
+var keyGen = function(){
+  return nextKey++;
+}
+
+//this is our ephemeral data store,
+//we are like snapchat but for text!!!!
+//we are like snapchat but for elevators
+var applicationData = {};
+
+
 
 /* These headers will allow Cross-Origin Resource Sharing (CORS).
  * This CRUCIAL code allows this server to talk to websites that

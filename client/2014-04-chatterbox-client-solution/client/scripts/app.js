@@ -1,5 +1,5 @@
 app = {
-    server: 'https://api.parse.com/1/classes/chatterbox/',
+    server: 'http://127.0.0.1:3000/',
     username: 'anonymous',
     lastMessageId: 0,
 
@@ -17,7 +17,7 @@ app = {
 
     loadAllMessages: function(){
       app.loadMsgs();
-      setTimeout(app.loadAllMessages, 500);
+      setTimeout(app.loadAllMessages, 10000);
     },
 
     handleSubmit: function(e){
@@ -58,7 +58,8 @@ app = {
     loadMsgs: function(){
       $.ajax({
         url: app.server,
-        data: { order: '-createdAt'},
+        type: 'GET',
+        // data: { order: '-createdAt'},
         contentType: 'application/json',
         success: function(json){
           //console.log(json.results);

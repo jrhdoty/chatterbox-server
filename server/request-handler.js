@@ -26,7 +26,19 @@ handlers.OPTIONS = function(request, response){
   };
 
 handlers.GET =  function(request, response){
-
+  var keys = Object.keys(applicationData);
+  var results = [];
+  console.log(keys.length);
+  for( var i = 0; i < keys.length; i++ ){
+    results.push(applicationData[keys[i]]);
+  }
+  var statusCode = 200;
+  var headers = defaultCorsHeaders;
+  headers['Content-Type'] = "text/plain";
+  response.writeHead(statusCode, headers);
+  results = JSON.stringify(results);
+  console.log(results);
+  response.end(results);
 };
 
 handlers.POST =  function(request, response){
@@ -43,11 +55,17 @@ handlers.POST =  function(request, response){
     key      = keyGen();
 
     applicationData[key] = {
-      key      : key,
+      objectId : key,
       username : username,
       time     : time,
       text     : text
     };
+
+    var statusCode = 200;
+    var headers = defaultCorsHeaders;
+    headers['Content-Type'] = "text/plain";
+    response.writeHead(statusCode, headers);
+    response.end("terminating options request")
   });
 };
 

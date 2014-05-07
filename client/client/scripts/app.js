@@ -1,5 +1,5 @@
 app = {
-    server: 'http://127.0.0.1:3000/',
+    server: 'http://127.0.0.1:3000/message',
     username: 'anonymous',
     lastMessageId: 0,
 
@@ -16,6 +16,7 @@ app = {
 
     loadAllMessages: function(){
       app.loadMsgs();
+      console.log('trying to load messages');
       setTimeout(app.loadAllMessages, 1000);
     },
 
@@ -65,7 +66,7 @@ app = {
         // data: { order: '-createdAt'},
         contentType: 'application/json',
         success: function(json){
-          json = JSON.parse(json)
+          json = JSON.parse(json);
           app.processNewMessages(json);
         },
         complete: function(){

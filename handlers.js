@@ -78,7 +78,7 @@ handlers["/"].GET = function(request, response){
 handlers["/client/client"].GET = function(request, response){
     var url = urlParse.parse(request.url);
     console.log(url);
-    var path = "/Users/johndoty/Desktop/HackReactor/Course/Sprints/chatterbox-server"+url.pathname;
+    var path = ""+url.pathname;
     console.log("PATHNAME IS: ", "."+url.pathname);
     fs.readFile(path, function(err, content){
     if(err){

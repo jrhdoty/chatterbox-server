@@ -17,7 +17,7 @@ app = {
     loadAllMessages: function(){
       app.loadMsgs();
       console.log('trying to load messages');
-      setTimeout(app.loadAllMessages, 10000);
+      setTimeout(app.loadAllMessages, 1000);
     },
 
     handleSubmit: function(e){

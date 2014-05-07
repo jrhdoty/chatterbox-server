@@ -17,7 +17,7 @@ app = {
     loadAllMessages: function(){
       app.loadMsgs();
       console.log('trying to load messages');
-      setTimeout(app.loadAllMessages, 1000);
+      setTimeout(app.loadAllMessages, 10000);
     },
 
     handleSubmit: function(e){
@@ -83,7 +83,7 @@ app = {
         contentType: 'application/json',
         success: function(json){
           //console.log(json);
-          //app.processNewMessage(message, json.objectId);
+          app.processNewMessage(message, json.objectId);
         },
         complete: function(){
           app.stopSpinner();

@@ -1,5 +1,6 @@
 var fs           = require('fs');
 var utils        = require('./utils.js');
+var urlParse     = require('url');
 var sendResponse = utils.sendResponse; 
 var keyGen       = utils.keyGen;
 var collectData  = utils.collectData;
@@ -9,7 +10,11 @@ handlers["/"]                = {};
 handlers["/message"]         = {};
 handlers["/client/client"]   = {};
 
-
+/////////////////////////////////////////////////////////////
+//
+//  MESSAGE HANDLER
+//
+/////////////////////////////////////////////////////////////
 handlers["/message"].OPTIONS = function(request, response){
     var headers = defaultCorsHeaders;
     headers['Content-Type'] = "text/plain";
@@ -47,7 +52,11 @@ handlers["/message"].POST = function(request, response){
   });
 };
 
-
+/////////////////////////////////////////////////////////////
+//
+//  INDEX HANDLER
+//
+/////////////////////////////////////////////////////////////
 handlers["/"].GET = function(request, response){
   console.log("GETTING INDEX");
   var headers = {'Content-Type' : "text/html"};
@@ -60,7 +69,27 @@ handlers["/"].GET = function(request, response){
 
 };
 
-handlers["/client/client"] = function(request, response){};
+
+/////////////////////////////////////////////////////////////
+//
+//  LOCAL RESOURCE HANDLER
+//
+/////////////////////////////////////////////////////////////
+handlers["/client/client"].GET = function(request, response){
+    var url = urlParse.parse(request.url);
+    console.log(url);
+    var path = "/Users/johndoty/Desktop/HackReactor/Course/Sprints/chatterbox-server"+url.pathname;
+    console.log("PATHNAME IS: ", "."+url.pathname);
+    fs.readFile(path, function(err, content){
+    if(err){
+      throw err;
+    }
+    var headers = defaultCorsHeaders;
+    // headers['Content-Type'] = "text/plain";
+    console.log("CORRECTLY FETCHED LOCAL RESOURCE");
+    sendResponse(response, content, headers, 201);
+  });
+};
 
 
 
@@ -69,11 +98,7 @@ handlers["/client/client"] = function(request, response){};
 //we are like snapchat but for elevators
 var applicationData = {};
 
-/* These headers will allow Cross-Origin Resource Sharing (CORS).
- * This CRUCIAL code allows this server to talk to websites that
- * are on different domains. (Your chat client is running from a url
- * like file://your/chat/client/index.html, which is considered a
- * different domain.) */
+/* These headers will allow Cross-Origin Resource Sharing (CORS). */
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",

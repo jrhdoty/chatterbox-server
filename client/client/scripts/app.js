@@ -83,7 +83,7 @@ app = {
         contentType: 'application/json',
         success: function(json){
           //console.log(json);
-          app.processNewMessage(message, json.objectId);
+          // app.processNewMessage(message, json.objectId);
         },
         complete: function(){
           app.stopSpinner();
